@@ -1,6 +1,7 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import { CONST } from 'constant';
+import { TrendChart } from 'components/graph/TrendChart';
 
 const ContentWrapper = styled('div')(() => ({
   width: '100%',
@@ -22,9 +23,19 @@ const ContentWrapper = styled('div')(() => ({
 }));
 
 export default function SystemChat(props: any) {
+  const { message, data, resType } = props;
+
   return (
     <ContentWrapper>
-      <div className="content">가세요</div>
+      {resType === 'graph' ? (
+        <div className="content">
+          <TrendChart data={data} />
+        </div>
+      ) : (
+        <div className="content">
+          {message} {resType}{' '}
+        </div>
+      )}
     </ContentWrapper>
   );
 }
