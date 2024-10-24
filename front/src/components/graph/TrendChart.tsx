@@ -47,6 +47,7 @@ const data = {
 };
 
 export const TrendChart = (props: any) => {
+  const { data } = props;
   const options: any = {
     responsive: true,
     maintainAspectRatio: false,
@@ -61,12 +62,13 @@ export const TrendChart = (props: any) => {
     },
   };
   const graphData = {
-    labels: props.data.x,
+    labels: data.graphData.labels,
     datasets: [
       {
-        label: 'test graph',
-        data: props.data.y,
-        borderColor: '#055aaf',
+        label: 'Chuck Temp - PM1 - Ch1',
+        data: data.graphData.datasets[0].data,
+        borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: 'rgb(75, 192, 192, 0.2)',
         tension: 0.3,
       },
     ],
@@ -81,7 +83,7 @@ export const TrendChart = (props: any) => {
         marginBottom: '30px',
       }}
     >
-      <Line data={data} options={options} />
+      <Line data={graphData} options={options} />
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
+import { CircularProgress } from '@mui/material';
 import { CONST } from 'constant';
 import { TrendChart } from 'components/graph/TrendChart';
 
@@ -23,18 +24,18 @@ const ContentWrapper = styled('div')(() => ({
 }));
 
 export default function SystemChat(props: any) {
-  const { message, data, resType } = props;
+  const { message, data, resType, loading } = props;
 
   return (
     <ContentWrapper>
-      {resType === 'graph' ? (
+      {loading ? (
+        <CircularProgress />
+      ) : resType === 'graph' ? (
         <div className="content">
           <TrendChart data={data} />
         </div>
       ) : (
-        <div className="content">
-          {message} {resType}{' '}
-        </div>
+        <div className="content">{message}</div>
       )}
     </ContentWrapper>
   );

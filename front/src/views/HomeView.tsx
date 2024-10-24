@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import axios from 'axios';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { CONST } from 'constant';
@@ -32,6 +33,7 @@ export default function HomeView(props: any) {
   const [chatList, setChatList] = useState<
     { sender: 'user' | 'system'; msg: string; data: any; resType: string }[]
   >([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -43,40 +45,50 @@ export default function HomeView(props: any) {
     scrollToBottom();
   }, [chatList]);
 
-  const SendUserMessage: any = (msg: string, type: string) => {
+  const SendUserMessage: any = async (msg: string, type: string) => {
     const newUserChat = { sender: 'user', msg: msg, resType: type };
     setChatList((prevList: any) => [...prevList, newUserChat]);
 
-    const newSystemRes: any = generateSysyemMessage(newUserChat);
-
+    const newSystemRes: any = await generateSysyemMessage(newUserChat);
+    console.log('?', newSystemRes);
     setChatList((prevList: any) => [...prevList, newSystemRes]);
   };
 
-  const generateSysyemMessage: any = (userReq: any) => {
-    if (userReq.resType === null) {
-      return {
-        sender: 'system',
-        msg: '응답 타입을 선택해주세요',
-        data: [],
-        resType: userReq.resType,
-      };
-    }
-    const llm_req: any = {
+  const generateSysyemMessage: any = async (userReq: any) => {
+    setLoading(true);
+    const sys_res = {
+      sender: 'system',
+      msg: '',
+      data: [],
+      resType: userReq.resType,
+    };
+
+    const llm_req = {
       message: userReq.msg,
       threadId: '', // DB 저장 필요 (새로운 채팅 생성 시)
       resType: userReq.resType,
     };
-    // @@@@ 여기에 백엔드 통신 로직 설정 필요해요~ @@@@
 
-    const tmp_response: any = {
-      sender: 'system',
-      msg: '테스트라구~조용히해',
-      data: [],
-      resType: userReq.resType,
-    }; // 임시 응답
-    console.log('요청:', tmp_response);
+    try {
+      if (!userReq.resType) {
+        sys_res.msg = '응답 타입을 선택해주세요';
+      } else if (userReq.resType === 'graph') {
+        const resData = await axios.post(
+          'http://10.100.100.200:5959/dbtest',
+          llm_req,
+        );
+        sys_res.data = resData.data.body;
+      } else {
+        sys_res.msg = '텍스트 응답은 테스트 중입니다.';
+      }
+    } catch (error) {
+      console.error('node err', error);
+      sys_res.msg = '시스템 오류 발생. 다시 시도해주세요.';
+    } finally {
+      setLoading(false);
+    }
 
-    return tmp_response;
+    return sys_res;
   };
 
   return (
@@ -91,6 +103,7 @@ export default function HomeView(props: any) {
               data={chat.data}
               resType={chat.resType}
               key={index}
+              loading={loading}
             />
           ),
         )}
