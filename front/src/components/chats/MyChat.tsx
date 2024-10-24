@@ -23,11 +23,10 @@ const ContentWrapper = styled('div')(() => ({
 }));
 
 export default function MyChat(props: any) {
+  const { message } = props;
   return (
     <ContentWrapper>
-      <div className="content">
-        안녕하세요adgadlkgakdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
-      </div>
+      <div className="content">{message}</div>
     </ContentWrapper>
   );
 }

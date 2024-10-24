@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { CONST } from 'constant';
 import { TextField } from '@mui/material';
@@ -32,6 +32,8 @@ const ContentWrapper = styled('div')(() => ({
       '.each-button': {
         fontSize: '1.8rem',
         marginRight: '15px',
+        display: 'flex',
+        alignItems: 'center',
       },
     },
     '.right-button': {
@@ -58,18 +60,47 @@ const ContentWrapper = styled('div')(() => ({
   },
 }));
 
+const ButtonWrapper = styled('div')<{ selected: boolean }>(({ selected }) => ({
+  backgroundColor: selected ? 'black' : '',
+  color: selected ? 'white' : '#333',
+  cursor: 'pointer',
+}));
+
 export default function PromptInput(props: any) {
+  const { SendUserMessage } = props;
+  const [inputMessage, setInputMessage] = useState<string>('');
+  const [resType, setResType] = useState<'graph' | 'text' | null>(null);
+
+  const onClickSend: any = () => {
+    console.log('사용자:', inputMessage);
+    SendUserMessage(inputMessage, resType);
+    setInputMessage('');
+    setResType(null);
+  };
+
   return (
     <ContentWrapper>
       <div className="content">
         <div className="left-button">
-          <InsightsIcon className="each-button" />
-          <ChatBubbleOutlineIcon className="each-button" />
+          <ButtonWrapper
+            className="each-button"
+            selected={resType === 'graph'}
+            onClick={() => setResType('graph')}
+          >
+            <InsightsIcon />
+          </ButtonWrapper>
+          <ButtonWrapper
+            className="each-button"
+            selected={resType === 'text'}
+            onClick={() => setResType('text')}
+          >
+            <ChatBubbleOutlineIcon />
+          </ButtonWrapper>
         </div>
         <TextField
           fullWidth
           multiline
-          placeholder="여기다가 입력해라"
+          placeholder="메시지 Using LLM"
           variant="outlined"
           InputProps={{
             style: {
@@ -92,9 +123,15 @@ export default function PromptInput(props: any) {
               },
             },
           }}
+          value={inputMessage}
+          onChange={(e: any) => setInputMessage(e.target.value)}
         />
         <div className="right-button">
-          <div className="button-cropper">
+          <div
+            className="button-cropper"
+            style={{ cursor: 'pointer' }}
+            onClick={onClickSend}
+          >
             <ArrowUpwardIcon className="each-button" />
           </div>
         </div>
