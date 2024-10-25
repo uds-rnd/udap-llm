@@ -17,17 +17,19 @@ const ContentWrapper = styled('div')(() => ({
     backgroundColor: '#F3F3F3',
     boxShadow: '0 0 5px rgba(200, 200, 200, 0.05)',
     width: '100%',
-    minHeight: '60px',
+    minHeight: '40px',
+    paddingTop: '7px',
+    paddingBottom: '7px',
     height: 'fit-content',
-    borderRadius: '30px',
+    borderRadius: '35px',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'end',
     '.left-button': {
-      height: '60px',
+      height: '40px',
       display: 'flex',
       alignItems: 'center',
-      marginLeft: '30px',
+      marginLeft: '20px',
       color: '#333',
       '.each-button': {
         fontSize: '1.8rem',
@@ -37,10 +39,10 @@ const ContentWrapper = styled('div')(() => ({
       },
     },
     '.right-button': {
-      height: '60px',
+      height: '40px',
       display: 'flex',
       alignItems: 'center',
-      marginRight: '30px',
+      marginRight: '20px',
       color: '#FFF',
       '.button-cropper': {
         width: '2rem',
@@ -106,8 +108,10 @@ export default function PromptInput(props: any) {
             style: {
               border: 'none',
               maxHeight: '300px',
-              minHeight: '60px',
-              overflow: 'scroll',
+              minHeight: '40px',
+              overflowY: 'scroll',
+              overflowX: 'hidden',
+              padding: 0,
             },
           }}
           sx={{
