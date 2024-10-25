@@ -1,6 +1,6 @@
-import HomeView from "./views/HomeView";
+import HomeView from './views/HomeView';
 
-import HomeIcon from "@mui/icons-material/Home";
+import HomeIcon from '@mui/icons-material/Home';
 
 export const router = {
   totalreport: HomeView,
@@ -8,8 +8,8 @@ export const router = {
 
 export const routers = [
   {
-    title: "Home",
-    path: "/home",
+    title: 'Home',
+    path: '/home',
     exact: false,
     component: HomeView,
     icon: HomeIcon,
