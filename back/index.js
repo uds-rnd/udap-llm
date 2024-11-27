@@ -92,19 +92,29 @@ app.post("/llm", async (req, res) => {
 
 app.post("/dbtest", async (req, res) => {
   maria.query(
-    `SELECT * FROM row_table 
-        WHERE prDid = 82 
-        AND rowLid = 15 
+    `SELECT * 
+FROM row_table 
+WHERE prDid = 82 
+  AND rowLid = 15 
+  AND rowSid = 3
+  AND rowCid IN (1,5,9,12)
+  AND rowRid IN (
+      SELECT rowRid
+      FROM row_table
+      WHERE prDid = 82 
+        AND rowLid = 15
         AND rowSid = 3
-        AND (rowCid = 5 OR rowCid = 9 OR rowCid = 12 OR rowCid = 1)
-        AND rowRid IN (
-            SELECT rowRid
-            FROM row_table
-                WHERE prDid = 82 
-                AND rowLid = 15
-                AND rowSid = 3 
-                AND rowVal = 'PM1'
-  );`,
+        AND rowVal = 'PM1'
+  )
+AND rowRid IN (
+      SELECT rowRid
+      FROM row_table
+      WHERE prDid = 82 
+        AND rowLid = 15
+        AND rowSid = 3
+        AND rowVal = 'CH1'
+  )
+  ;`,
     function (err, rows) {
       let resRow = [];
       let resXArr = [];
@@ -141,6 +151,43 @@ app.post("/dbtest", async (req, res) => {
       });
     }
   );
+});
+
+app.post("/text", async (req, res) => {
+  console.log("req", req.body);
+  let textFlag = "";
+
+  ////////////// 리비전 히스토리 노트
+  if (
+    req.body.message.includes("히스토리") ||
+    req.body.message.includes("노트")
+  ) {
+    let historyQuery = "";
+    let textFlag = "history";
+
+    if (req.body.message.toUpperCase().includes("ECOLITE")) {
+      historyQuery = `SELECT * FROM Template WHERE eqType = "ECOLITE3000";`;
+    } else if (req.body.message.toUpperCase().includes("GENEVA")) {
+      historyQuery = `SELECT * FROM Template WHERE eqType = "GENEVA STP300 xp";`;
+    } else {
+      historyQuery = `SELECT * FROM Template WHERE eqType = "ECOLITE3000";`;
+      console.log("Flag 2");
+    }
+
+    maria.query(historyQuery, function (err, rows) {
+      console.log("rows.....................", rows);
+
+      res.send({
+        status: "OK",
+        body: {
+          rowData: rows,
+          flag: `text-${textFlag}`,
+        },
+      });
+    });
+  } else {
+    console.log("Flag 1");
+  }
 });
 
 // 사용 X

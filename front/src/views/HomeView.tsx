@@ -63,23 +63,34 @@ export default function HomeView(props: any) {
       resType: userReq.resType,
     };
 
-    const llm_req = {
-      message: userReq.msg,
-      threadId: '', // DB 저장 필요 (새로운 채팅 생성 시)
-      resType: userReq.resType,
-    };
-
     try {
       if (!userReq.resType) {
         sys_res.msg = '응답 타입을 선택해주세요';
       } else if (userReq.resType === 'graph') {
+        const llm_req = {
+          message: userReq.msg,
+          threadId: '', // DB 저장 필요 (새로운 채팅 생성 시)
+          resType: userReq.resType,
+        };
+
         const resData = await axios.post(
           'http://10.100.100.200:5959/dbtest',
           llm_req,
         );
         sys_res.data = resData.data.body;
-      } else {
-        sys_res.msg = '텍스트 응답은 테스트 중입니다.';
+      } else if (userReq.resType === 'text') {
+        const text_req = {
+          message: userReq.msg,
+          resType: userReq.resType,
+        };
+
+        const resData = await axios.post(
+          'http://10.100.100.200:5959/text',
+          text_req,
+        );
+
+        // sys_res.msg = '텍스트 응답은 테스트 중입니다.';
+        sys_res.data = resData.data.body;
       }
     } catch (error) {
       console.error('node err', error);

@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import { CircularProgress } from '@mui/material';
 import { CONST } from 'constant';
 import { TrendChart } from 'components/graph/TrendChart';
+import HistoryTable from 'components/graph/HistoryTable';
 
 const ContentWrapper = styled('div')(() => ({
   width: '100%',
@@ -20,6 +21,9 @@ const ContentWrapper = styled('div')(() => ({
     borderRadius: '0 20px 20px 20px',
     wordBreak: 'break-word',
     boxShadow: '7px 9px 8px rgba(200,200,200,0.1)',
+    '.content-text-additional': {
+      marginBottom: '10px',
+    },
   },
 }));
 
@@ -35,7 +39,12 @@ export default function SystemChat(props: any) {
           <TrendChart data={data} />
         </div>
       ) : (
-        <div className="content">{message}</div>
+        <div className="content">
+          <div className="content-text-additional">
+            질의에 대한 답은 아래와 같습니다.
+          </div>
+          {data.flag.includes('history') && <HistoryTable data={data} />}
+        </div>
       )}
     </ContentWrapper>
   );
