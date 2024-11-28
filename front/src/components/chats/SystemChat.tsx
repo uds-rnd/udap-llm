@@ -43,7 +43,10 @@ export default function SystemChat(props: any) {
           <div className="content-text-additional">
             질의에 대한 답은 아래와 같습니다.
           </div>
-          {data.flag.includes('history') && <HistoryTable data={data} />}
+          {data.flag?.includes('history') && <HistoryTable data={data} />}
+          {data.flag?.includes('comparison') && <div style={{whiteSpace: "pre-wrap"}}>
+            {data.rowData}
+            </div>}
         </div>
       )}
     </ContentWrapper>

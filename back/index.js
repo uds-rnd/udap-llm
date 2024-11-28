@@ -186,7 +186,50 @@ app.post("/text", async (req, res) => {
       });
     });
   } else {
-    console.log("Flag 1");
+    ////////////// 리비전 비교
+    let responseSample = "";
+    let textFlag = "comparison";
+
+    if (req.body.message.includes("소분류")) {
+      responseSample = `[소분류]
+      (추가) 4.1 Firmware
+      (추가) 6.1 MANOMETER / KS2900 (KRONE) C0800975
+      (추가) 6.2 FLOW SWITCH / PF2W700 Series (SMC)
+      (추가) 6.3 FLOW WSITCH / PF3W720-N03-C-M Series (SMC)
+      (이름 수정) 9.1 Hardware Before -> 9.1 Hardware Base Parameter
+      (삭제) 11.1 Source Power Calibration Yes or No
+      (삭제) 11.2 Source On Time`;
+      
+      res.send({
+        status: "OK",
+        body: {
+          rowData: responseSample,
+          flag: `text-${textFlag}`,
+        },
+      });
+    } else {
+      if (req.body.message.toUpperCase().includes("GENEVA")) {
+        responseSample = `[대분류]
+    (추가) 4.Firmware
+    (추가) 6.Part Parameter (2)
+    (이름 수정) 7.Utility Before -> 7.Utility Power Check
+    (하위 수정) 9.HW Base Parameter
+    (삭제) 11.Source`;
+      } else {
+        responseSample = `[대분류]
+    (추가) 13.APC
+    (추가) 14.Process Base Parameter
+    (삭제) 15.Interlock`;
+      }
+
+      res.send({
+        status: "OK",
+        body: {
+          rowData: responseSample,
+          flag: `text-${textFlag}`,
+        },
+      });
+    }
   }
 });
 
