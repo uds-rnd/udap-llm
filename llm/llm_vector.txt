@@ -1,0 +1,30 @@
+{
+    "Users": {
+        "columns": ["userId", "userCompany", "userConfig", "userDisable", "userEmail", "userGroup", "userName", "userPhone", "userPw", "userRole", "userSince"],
+        "relations": []
+    },
+    "Template": {
+        "columns": ["id", "eqType", "prtNote", "prtRevision", "users_userId", "majorRev"],
+        "relations": ["Users"]
+    }, 
+    "Report": {
+        "columns": ["prDid", "eqSerial", "eqType", "template_id", "users_userId"],
+        "relations": ["Users", "Template"]
+    },
+    "MainCategory": {
+        "columns": ["mainId", "mainLid", "mainVal", "template_main_id", "mainSeq"],
+        "relations": ["Template"]
+    }, 
+    "SubCategory": {
+        "columns": ["subId", "subLid", "subSid", "subVal", "template_sub_id", "subSeq"],
+        "relations": ["Template"]
+    }, 
+    "Columns": {
+        "columns": ["colId", "colCid", "colLid", "colSid", "colVal", "template_col_id"],
+        "relations": ["Template"]
+    }, 
+    "Row_table": {
+        "columns": ["rowId", "prDid", "rowCid", "rowLid", "rowRid", "rowSid", "rowVal", "template_row_id", "rowSeq"],
+        "relations": ["Template"]
+    }
+}
